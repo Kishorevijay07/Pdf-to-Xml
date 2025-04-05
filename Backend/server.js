@@ -41,8 +41,6 @@ app.use('/api/user', queryFunction);
 app.use('/api/all', feedbackFunction);
 
 
-
-
 app.listen(port, () => {
     console.log(`Server running successfully on http://localhost:${port}`);
     connectdb();

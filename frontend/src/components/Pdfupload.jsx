@@ -5,14 +5,16 @@ import { CloudArrowUpIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Header from "../pages/Header";
 import Sidebar from "./Sidebar.jsx";
 import pdftoxml from "./../images/pdf-xml.png";
-
+import toast from "react-hot-toast";
+import { baseUrl } from "../urls/Constant.js";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 const Pdfupload = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [xml, setXml] = useState("");
   const navigate = useNavigate();
 
-
+  const queryClient = useQueryClient()
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile?.type !== "application/pdf") {
@@ -35,43 +37,59 @@ const Pdfupload = () => {
     const formData = new FormData();
     formData.append("pdf", file); 
 
+
     try {
       const res = await fetch("http://localhost:3000/api/convert", {
         method: "POST",
         body: formData,
       });
-
+    
       if (!res.ok) throw new Error("Conversion failed");
-
+    
       const resultXml = await res.text();
       setXml(resultXml);
+
+
+      const filename = file?.name.replace(".pdf", ".xml") || "converted.xml";
+ 
+      const storeRes = await fetch(`${baseUrl}/api/user/storefile`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          fileName: filename,     
+          xmlData: resultXml,     
+        }),
+      });
+    
+      const storeData = await storeRes.json();
+      if (!storeRes.ok) throw new Error(storeData.error || "Not saved");
+      queryClient.invalidateQueries({ queryKey: ["authUser"]});
+      console.log("Saved file info:", storeData);
     } catch (err) {
       console.error("Upload Error:", err);
-      alert("Failed to convert PDF.");
+      alert("Failed to convert or store file.");
     } finally {
       setLoading(false);
     }
+    
   };
 
-
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const blob = new Blob([xml], { type: "application/xml" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     const filename = file?.name.replace(".pdf", ".xml") || "converted.xml";
-
+  
     a.href = url;
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    authUser.files.push({
-      fileName: filename,
-    });
-    authUser.save();
-
   };
-
-
+  
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
@@ -125,22 +143,27 @@ const Pdfupload = () => {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row items-center justify-center bg-white p-6 mt-10 rounded-lg shadow-lg w-full max-w-4xl">
-          <div className="md:w-1/2 flex justify-center">
-            <img src={pdftoxml} alt="PDF to XML Conversion" className="max-w-md w-full rounded-lg" />
-          </div>
-          <div className="md:w-1/2 text-center md:text-left mt-6 md:mt-0">
-            <h2 className="text-2xl font-bold mb-4">
-              How to Convert PDF to XML Online for Free
-            </h2>
-            <ol className="list-decimal list-inside text-lg text-gray-700 space-y-2">
-              <li>Select a PDF file to upload.</li>
-              <li>Click "Convert PDF to XML".</li>
-              <li>Preview the XML result.</li>
-              <li>Click "Download XML" to save the file.</li>
-            </ol>
-          </div>
-        </div>
+<div className="flex flex-col md:flex-row items-center justify-center bg-white p-6 mt-10 rounded-lg shadow-lg w-full max-w-4xl">
+  <div className="md:w-1/2 flex justify-center">
+    <img
+      src={pdftoxml}
+      alt="PDF to XML Conversion"
+      className="w-full max-w-[350px] rounded-lg" // <-- Reduced max-width here
+    />
+  </div>
+  <div className="md:w-1/2 text-center md:text-left mt-6 md:mt-0">
+    <h2 className="text-2xl font-bold mb-4">
+      How to Convert PDF to XML Online for Free
+    </h2>
+    <ol className="list-decimal list-inside text-lg text-gray-700 space-y-2">
+      <li>Select a PDF file to upload.</li>
+      <li>Click "Convert PDF to XML".</li>
+      <li>Preview the XML result.</li>
+      <li>Click "Download XML" to save the file.</li>
+    </ol>
+  </div>
+</div>
+
       </div>
     </div>
   );

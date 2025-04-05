@@ -14,7 +14,7 @@ export const convertPdfToXml = async(req, res) => {
 
   const pdfParser = new PDFParser();
   const filePath = path.join(__dirname, "..", "uploads", req.file.filename);
- 
+  console.log(req.file.filename)
   pdfParser.on("pdfParser_dataError", (errData) => {
     console.error("PDF parse error:", errData.parserError);
     res

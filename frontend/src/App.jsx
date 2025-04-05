@@ -3,14 +3,13 @@ import Navbar from "./components/Navbar";
 import Pdfupload from "./components/Pdfupload";
 import Profile from './components/Profile.jsx';
 import Login from "./components/Login";
-
-
 import QueryPage from "./components/QueryPage.jsx";
 import CreateAccount from "./components/CreateAccount.jsx"
 import Feedback from "./components/Feedback.jsx";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./components/LoadingSpinner.jsx";
 import { baseUrl } from "./urls/Constant.js";
+import ResultPage from "./components/ResultPage.jsx"
 
 const App = () => {
 
@@ -41,6 +40,33 @@ const App = () => {
     },
     retry: false,
   });
+   
+  const { data: Userfiles} = useQuery({
+    queryKey: ["Userfiles"],
+    queryFn: async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/user/getfiles`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Something went wrong");
+        }
+  
+        const data = await res.json();
+        console.log("User Files:", data);
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    retry: false,
+  });
   
 
 if(isLoading){
@@ -59,14 +85,12 @@ if(isLoading){
 
         <Routes>
           <Route path="/" element={<Pdfupload />} />
-          {/* <Route path="/features" element={<Features />} />*/}
           <Route path="/create-account" element={!authUser ? <CreateAccount/> : <Navigate to = "/"/>} />
           <Route path="/helpandsupport" element={<QueryPage/>} />
-
+          <Route path="/result" element={<ResultPage/>}/>
           <Route path="/profile" element={authUser ? <Profile /> : <Navigate to ="/login"/>} /> 
           <Route path="/login" element={!authUser ? <Login /> :<Navigate to="/"/>} />
           <Route path="/feedback" element = {<Feedback/>}/>
-          <Route path="/output-of-file" element = {<output-of-file/>}/>
         </Routes>
         {/* Footer */}
         <footer className="bg-gray-100 text-center p-4 mt-16">

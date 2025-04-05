@@ -8,7 +8,7 @@ import { baseUrl } from "../urls/Constant.js"; // ✅ Ensure baseUrl is imported
 const Login = () => {
   const queryClient = useQueryClient();
 
-  // ✅ State for Form Data
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",

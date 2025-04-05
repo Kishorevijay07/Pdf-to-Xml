@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<pdfData>
+    <Transcoder>pdf2json@3.1.5 [https://github.com/modesty/pdf2json]</Transcoder>
+    <Meta>
+        <PDFFormatVersion>1.5</PDFFormatVersion>
+        <IsAcroFormPresent>false</IsAcroFormPresent>
+        <IsXFAPresent>false</IsXFAPresent>
+        <Creator>Writer</Creator>
+        <Producer>LibreOffice 6.2</Producer>
+        <CreationDate>D:20190710153106+05'30'</CreationDate>
+        <Metadata/>
+    </Meta>
+    <Pages>
+        <Width>38.25</Width>
+        <Height>49.5</Height>
+        <Texts>
+            <x>3.3</x>
+            <y>3.4939999999999998</y>
+            <w>82.92</w>
+            <clr>0</clr>
+            <sw>0.32553125</sw>
+            <A>left</A>
+            <R>
+                <T>Sample%20PDF%20file%20</T>
+                <S>-1</S>
+                <TS>2</TS>
+                <TS>15</TS>
+                <TS>0</TS>
+                <TS>0</TS>
+            </R>
+        </Texts>
+    </Pages>
+</pdfData>

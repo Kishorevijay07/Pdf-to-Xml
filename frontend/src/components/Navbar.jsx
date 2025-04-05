@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Navbar = () => {
-    const handlesubmit =()=>{
-        
-    }
+
     const queryClient = useQueryClient();
     const authUser = queryClient.getQueryData(["authUser"]);
   return (
@@ -25,9 +23,6 @@ const Navbar = () => {
         </div>
       </nav>
     </div>
-
-    
-
   );
 };
 

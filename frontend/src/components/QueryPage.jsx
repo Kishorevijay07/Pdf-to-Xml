@@ -54,10 +54,8 @@ const QueryPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
-
       <div className="flex-1 p-6">
         <Header />
-
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-10">
           <h2 className="text-xl font-semibold mb-4 text-center">Submit Your Query</h2>
           <form onSubmit={handleSubmit} className="space-y-4">

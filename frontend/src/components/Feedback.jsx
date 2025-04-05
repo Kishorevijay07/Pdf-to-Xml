@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { baseUrl } from "../urls/Constant";
 
-const baseUrl = "http://localhost:3000";
 
 const Feedback = () => {
   const [rating, setRating] = useState(null);
